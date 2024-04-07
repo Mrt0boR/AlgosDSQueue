@@ -43,6 +43,7 @@ namespace AssessedExercise1_CustomerQueue2
 
                 throw new Exception("queue is full");
             }
+            Console.WriteLine("CustomerEnqueued");
         }
            /*
             *                                     DEQUEUE  
@@ -51,7 +52,7 @@ namespace AssessedExercise1_CustomerQueue2
             * is returned
             * 
             */
-        public Customer Dequeue(Customer customer)
+        public Customer Dequeue()
         {   
             //retrieve the customer at the head index of customer queue
             
@@ -84,7 +85,7 @@ namespace AssessedExercise1_CustomerQueue2
          * essentially dequeueing without the dequeing part!
          * 
          */
-        public Customer Peek(Customer customer)
+        public Customer Peek()
         {
             Customer headCustomer;
             headCustomer = customerQueueArray[head];
@@ -93,7 +94,7 @@ namespace AssessedExercise1_CustomerQueue2
 
         public bool isEmpty()
         {
-            return head == 0;
+            return head == tail;
         }
 
         public bool isFull()
