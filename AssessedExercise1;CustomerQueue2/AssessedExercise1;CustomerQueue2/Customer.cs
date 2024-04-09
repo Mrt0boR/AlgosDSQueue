@@ -8,10 +8,12 @@ namespace AssessedExercise1_CustomerQueue2
 {
     class Customer
     {
+
         private string name;
         private int age;
         private string address;
         private float amountOwed;
+        
 
         public Customer(string name, int age, string address, float amountOwed)
         {
