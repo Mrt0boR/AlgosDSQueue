@@ -29,9 +29,17 @@ namespace AssessedExercise1_CustomerQueue2
 
         }
 
-        //Enqueue action
+
+
+
+
+        /*                                                                                                ENQUEUE ACTION BUTTON METHOD                                                                     */
         private void enqueueButton_Click(object sender, EventArgs e)
         {
+
+
+            //Ensures that all text boxes are filled so a customer is not enqueued with data missing.
+
             if (string.IsNullOrEmpty(textBox1.Text)
                 || string.IsNullOrEmpty(textBox2.Text)
                 || string.IsNullOrEmpty(textBox3.Text)
@@ -40,10 +48,15 @@ namespace AssessedExercise1_CustomerQueue2
             {
                 MessageBox.Show("Please Fill in all the Information Boxes.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            //convert amount owed String inputted in the textbox to the appropriate float obj specified in the Customer class
+            
+
+            //checks that the queue is not full before enquing the customer and their details.
             if (!customerQueue.isFull())
             {
 
+                //this parses the intager entered as the age, checking it is an intager and not a string, as a user could put "twelve" rather than "12".
+
+                //Both the age parsing object allow the text entered in the boxes to be converted into ints and floats so that the data entered can be accurately inserted into the customer object.
                 int ageParsingObject;
                 try
                 {
@@ -55,7 +68,7 @@ namespace AssessedExercise1_CustomerQueue2
                     return;
                 }
 
-                //convert amount owed String inputted in the textbox to the appropriate float obj specified in the Customer class
+                //This section also follows the same function as the age intager check.
                 float amountOwedParsingObject;
                 try
                 {
@@ -67,6 +80,8 @@ namespace AssessedExercise1_CustomerQueue2
                     return;
                 }
 
+
+                //String data and parsed ints and floats from text box 2 and 4 are then entered into a new customer object.
                 Customer newEnqueuedCustomer = new Customer
                 (
                     textBox1.Text,
@@ -75,13 +90,16 @@ namespace AssessedExercise1_CustomerQueue2
                     amountOwedParsingObject
                 );
 
+                //the arguments of this data are then passed onto the enqueue method in the queue class.
                 customerQueue.Enqueue(newEnqueuedCustomer);
 
+                //clears the text boxes so that new data can be entered again
                 textBox1.Clear();
                 textBox2.Clear();
                 textBox3.Clear();
                 textBox4.Clear();
 
+                //this tells the user that the data has been entred into the queue 
                 label11.Text = ("Customer Enqueued Successfully");
 
                 int amountofcustomers = customerQueue.customerQueueCount();
@@ -93,17 +111,20 @@ namespace AssessedExercise1_CustomerQueue2
 
 
 
+            } else
+            {
+                MessageBox.Show("The Customer Queue is Full", "The Queue has Reached Capacity (10)", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
 
 
 
-        //Show number of Customers Button action
+        
 
 
 
-        //Dequeue Button Action
+        /*                                                                                                DEQUEUE ACTION BUTTON METHOD                                                                     */
 
         private void button3_MouseHover(object sender, MouseEventArgs e)
         {
@@ -118,15 +139,11 @@ namespace AssessedExercise1_CustomerQueue2
                 Customer dequeuecustomer = customerQueue.Dequeue();
 
 
-                //need to use my peek method
-                label10.Text = (
-                        " Customer Name: " + dequeuecustomer.Name + "" +
-                        " Customer Age: " + dequeuecustomer.Age + "" +
-                        " Customer Address: " + dequeuecustomer.Address + "" +
-                        " Customer Amount Owed: " + dequeuecustomer.AmountOwed + ""
-                );
+                
+                label10.Text = (dequeuecustomer.GetInformation());
 
                 Console.WriteLine("Customer Dequeued");
+                
                 totalAmountOwedUpdater();
                 
 
@@ -146,64 +163,19 @@ namespace AssessedExercise1_CustomerQueue2
 
         }
 
-        //Method to constantly update the total amount owed by all the customers in the Queue
-
-
-        // add a way to remove the value of a customer who is dequed
-
-        //Add to cust queue??
+        /*                                                                                             TOTAL AMOUNT REAL-TIME UPDATER                                                                                  */
         private void totalAmountOwedUpdater()
         {
-            //assign a float that begins at 0 as it would be when the queue is empty
+            
 
-            float amountOwedByAllCustomers = 0;
-
-            for (int i = 0; i < customerQueue.customerQueueCount(); i++)
-            {
-
-
-
-                /* 
-                 First I tried to iterate through like an array:
-
-                Customer customer = customerQueue[i];
-
-                But i got a CS0021 error. So, I decided to manually sort through the queue in
-                this methiod manually dequing and then, adding the amount seen in the peek into a running total
-                and then dequing when the queue itself is not empty.
-                 
-                 
-                 */
-
-
-
-
-                Customer customer = customerQueue.Dequeue();
-
-                /* add to running total the += operator is shorthand for:
-                *   amountOwedByAllCustomers = amountOwedByAllCustomers + customer.AmountOwed
-                */
-                amountOwedByAllCustomers += customer.AmountOwed;
-
-                customerQueue.Enqueue(customer);
-
-            }
-
-            label13.Text = amountOwedByAllCustomers.ToString();
+            float customerMaxOwed = customerQueue.totalAmountOwedFinder();
+            
+            label13.Text = customerMaxOwed.ToString();
 
 
         }
-        private void button2_Click(object sender, EventArgs e)
-        {
-            Customer peekedCustomer = customerQueue.Peek();
 
-            label14.Text = (
-                        " Customer Name: " + peekedCustomer.Name + "" +
-                        " Customer Age: " + peekedCustomer.Age + "" +
-                        " Customer Address: " + peekedCustomer.Address + "" +
-                        " Customer Amount Owed: " + peekedCustomer.AmountOwed + ""
-                );
-        }
+                                            /*                                                         MAX AMOUNT BUTTON METHOD                                                                                       */
 
         private void button4_Click(object sender, EventArgs e)
         {
@@ -216,20 +188,33 @@ namespace AssessedExercise1_CustomerQueue2
             }
             else
             {
-                MessageBox.Show("No Customers are in the Queue So a Maximum Amount Owed Cannot be Retrieved","Queue is Empty", MessageBoxButtons.OK, MessageBoxIcon.Information );
+                MessageBox.Show("No Customers are in the Queue So a Maximum Amount Owed Cannot be Retrieved","Maximum Amount Owed Retrieval Error: The Queue is Empty", MessageBoxButtons.OK, MessageBoxIcon.Error );
             }
         }
 
+
+                                              /*                                                        PEEK BUTTON METHOD                                                                                          */
+       
+        
         private void button2_Click_1(object sender, EventArgs e)
         {
-            Customer peekedCustomer = customerQueue.Peek();
+            
 
-            label14.Text = (
-                        " Customer Name: " + peekedCustomer.Name + "" +
-                        " Customer Age: " + peekedCustomer.Age + "" +
-                        " Customer Address: " + peekedCustomer.Address + "" +
-                        " Customer Amount Owed: " + peekedCustomer.AmountOwed + ""
-                );
+            if (!customerQueue.isEmpty())
+            {
+                Customer peekedCustomer = customerQueue.Peek();
+
+                label14.Text = (peekedCustomer.GetInformation());
+
+            }
+            else
+            {
+
+                MessageBox.Show("There Are No Customers in the Queue. Please Enqueue a Customer and try again","Peek Error: The Queue is Empty", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            
+            }
+
+
         }
 
     }
